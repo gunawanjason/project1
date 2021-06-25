@@ -2,6 +2,11 @@
 @section('content')
 	<div class="container-fluid">
 		<div id="app">
+			Harga Maksimal: <br>
+			<input type="range" min="0" max="100000" v-model="maksimum" step=1000> <br>
+			@{{maksimum}}<br>
+			<button v-on:click="makanan">Search</button>
+
 			<div class="dropdown">
 				<a class="fas fa-shopping-cart mx-2 dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
 				</a>
@@ -57,10 +62,11 @@
 				el: "#app",
 				data: {
 					food : [ ],
-					added : []
+					added : [],
+					maksimum : 0
 			},
 			mounted : function(){
-				axiosInstance.get('/vuejs/api_food.php')
+				axiosInstance.get('/vuejs/api_food.php?maks='+this.maksimum)
 				.then(response => response.data)
 				.then( data =>{
 					this.food = data;
@@ -73,7 +79,6 @@
 						localStorage.removeItem('added');
 					}
 				}
-
 			},
 			methods:{
 				tambah: function(barang){
@@ -115,7 +120,14 @@
 					axiosInstance.post('/vuejs/api_savecart.php',data).then(console.log);
 					localStorage.removeItem('added');
 					this.added = [];
-				}
+				},
+				makanan : function(){
+					axiosInstance.get('/vuejs/api_food.php?maks='+this.maksimum)
+					.then(response => response.data)
+					.then( data =>{
+						this.food = data;
+					})
+				},
 			}
 		})
 	</script>
