@@ -5,14 +5,15 @@
 			Harga Maksimal: <br>
 			<input type="range" min="0" max="100000" v-model="maksimum" step=1000> <br>
 			@{{maksimum}}<br>
-			<button v-on:click="makanan">Search</button>
+			<button v-on:click="makanan">Search</button><br>
+			<input type="text" v-model="nama"><br>
+			<button v-on:click="nama_makanan">Search</button>
 
 			<div class="dropdown">
 				<a class="fas fa-shopping-cart mx-2 dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
 				</a>
 				<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 			    	<li v-for="(item, index) in added"><a class="dropdown-item">
-			    		@{{item.qty}}
 			    		@{{item.qty}}x @{{item.product.name}} Rp. @{{(item.qty*item.product.sell_price)}}
 			    		<button class="fas fa-trash" v-on:click="buang(index)"></button>
 			    	</a></li>
@@ -63,7 +64,8 @@
 				data: {
 					food : [ ],
 					added : [],
-					maksimum : 0
+					maksimum : 0,
+					nama : ''
 			},
 			mounted : function(){
 				axiosInstance.get('/vuejs/api_food.php?maks='+this.maksimum)
@@ -128,6 +130,13 @@
 						this.food = data;
 					})
 				},
+				nama_makanan : function(){
+					axiosInstance.get('/vuejs/api_food.php?nama='+this.nama)
+					.then(response => response.data)
+					.then( data =>{
+						this.food = data;
+					})
+				}
 			}
 		})
 	</script>
